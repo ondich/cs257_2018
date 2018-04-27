@@ -3,6 +3,9 @@ package edu.carleton.jondich;
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
+        Autocompleter completer = new Autocompleter(args[0]);
+        for (String actor : completer.getCompletions("")) {
+            System.out.println(actor);
+        }
     }
 }

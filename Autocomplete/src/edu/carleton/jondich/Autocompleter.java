@@ -8,10 +8,15 @@
  */
 package edu.carleton.jondich;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Autocompleter {
+
+    private ArrayList<String> actors;
 
     /**
      * @param dataFilePath the path to the data file containing the set of items to
@@ -21,10 +26,22 @@ public class Autocompleter {
      * to use different datasets and different approaches to doing the autocompletion.)
      */
     public Autocompleter(String dataFilePath) {
-        // Initialization goes here, as needed. For example, you might load
-        // from a file into a list (or a hashmap or something like that)
-        // the list of strings that are going to form the dataset of potential
-        // auto-completions. The initialization will be up to you.
+        actors = new ArrayList<String>();
+
+        File inputFile = new File(dataFilePath);
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(inputFile);
+        } catch (FileNotFoundException e) {
+            System.err.println(e);
+            return;
+        }
+
+        // Load the lines of the actors file into the private ArrayList.
+        while (scanner.hasNextLine()) {
+            String actor = scanner.nextLine();
+            actors.add(actor);
+        }
     }
 
     /**
@@ -34,6 +51,6 @@ public class Autocompleter {
      *  are sorted from best match to weakest match)
      */
     public List<String> getCompletions(String searchString) {
-        return new ArrayList<String>();
+        return actors;//new ArrayList<String>();
     }
 }
