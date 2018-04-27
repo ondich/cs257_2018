@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-    psycopg2-demo.py
+    psycopg2-sample.py
     Jeff Ondich, 23 April 2016
 
     A very short demo of how to use psycopg2 to connect to and
