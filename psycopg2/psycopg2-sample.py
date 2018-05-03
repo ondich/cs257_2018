@@ -46,8 +46,29 @@ except Exception as e:
     exit()
 
 # We have a cursor now. Iterate over its rows to print the results.
+print('===== All authors =====')
 for row in cursor:
     print(row[0], row[1])
+print()
+
+# Do you have parameters to put into your query? To avoid
+# the very common and very dangerous security attack known
+# as "SQL Injection", use the parameterized version of
+# cursor.execute, like so.
+search_string = 'Brontë'
+query = '''SELECT first_name, last_name
+           FROM authors
+           WHERE last_name = %s'''
+try:
+    cursor.execute(query, (search_string,))
+except Exception as e:
+    print(e)
+    exit()
+
+print('===== Authors with last name {0} ====='.format(search_string))
+for row in cursor:
+    print(row[0], row[1])
+print()
 
 # Don't forget to close the database connection.
 connection.close()
