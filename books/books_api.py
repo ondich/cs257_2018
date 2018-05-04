@@ -54,12 +54,14 @@ def set_headers(response):
 @app.route('/authors/') 
 def get_authors():
     '''
-    Returns a list of all the authors in our database, in alphabetical
-    order by last name, then first_name. See get_author_by_id below
-    for description of the author resource representation.
+    Returns a list of all the authors in our database. See
+    get_author_by_id below for description of the author
+    resource representation.
 
-        http://.../authors/
-        http://.../authors/?sort=last_name
+    By default, the list is presented in alphabetical order
+    by last name, then first_name. You may, however, use
+    the GET parameter sort to request sorting by birth year.
+
         http://.../authors/?sort=birth_year
 
     Returns an empty list if there's any database failure.
@@ -79,7 +81,7 @@ def get_authors():
     if connection is not None:
         try:
             for row in get_select_query_results(connection, query):
-                author = {'author_id':row[0],
+                author = {'id':row[0],
                           'first_name':row[1], 'last_name':row[2],
                           'birth_year':row[3], 'death_year':row[4]}
                 author_list.append(author)
@@ -92,9 +94,11 @@ def get_authors():
 @app.route('/authors/<author_last_name>')
 def get_authors_by_last_name(author_last_name):
     '''
-    Returns a list of all the authors with last names equal to
-    (case-insensitive) the specified last name.  See get_author_by_id
-    below for description of the author resource representation.
+    Returns a list of all the authors with last names containing
+    the specified last name. The match is case-insensitive.
+    
+    See get_author_by_id below for a description of the
+    author resource representation.
     '''
     query = '''SELECT id, first_name, last_name, birth_year, death_year
                FROM authors
@@ -106,7 +110,7 @@ def get_authors_by_last_name(author_last_name):
     if connection is not None:
         try:
             for row in get_select_query_results(connection, query, (author_last_name,)):
-                author = {'author_id':row[0],
+                author = {'id':row[0],
                           'first_name':row[1], 'last_name':row[2],
                           'birth_year':row[3], 'death_year':row[4]}
                 author_list.append(author)
@@ -119,10 +123,10 @@ def get_authors_by_last_name(author_last_name):
 @app.route('/author/<author_id>')
 def get_author_by_id(author_id):
     '''
-    Returns the author resource that has the specified id.
+    Returns the author resource for the author with the specified id.
     An author resource will be represented as a JSON dictionary
     with keys 'first_name' (string value), 'last_name' (string),
-    'birth_year' (int), 'death_year' (int), and 'author_id' (int).
+    'birth_year' (int), 'death_year' (int), and 'id' (int).
 
     Returns an empty dictionary if there's any database failure.
     '''
@@ -134,9 +138,9 @@ def get_author_by_id(author_id):
     if connection is not None:
         try:
             cursor = get_select_query_results(connection, query, (author_id,))
-            row = cursor.__next__()
+            row = next(cursor)
             if row is not None:
-                author = {'author_id':row[0],
+                author = {'id':row[0],
                           'first_name':row[1], 'last_name':row[2],
                           'birth_year':row[3], 'death_year':row[4]}
         except Exception as e:
@@ -149,8 +153,8 @@ def get_author_by_id(author_id):
 def get_books():
     '''
     Returns the list of books in the database. A book resource
-    will be represented by a JSON dictionary with keys 'title' (string),
-    and 'publication_year' (int).
+    will be represented by a JSON dictionary with keys 'id' (int),
+    'title' (string), and 'publication_year' (int).
 
     Returns an empty list if there's any database failure.
     '''
@@ -160,7 +164,7 @@ def get_books():
     if connection is not None:
         try:
             for row in get_select_query_results(connection, query):
-                book = {'book_id':row[0], 'title':row[1], 'publication_year':row[2]}
+                book = {'id':row[0], 'title':row[1], 'publication_year':row[2]}
                 book_list.append(book)
         except Exception as e:
             print(e, file=sys.stderr)
@@ -183,9 +187,9 @@ def get_book_by_id(book_id):
     if connection is not None:
         try:
             cursor = get_select_query_results(connection, query, (book_id,))
-            row = cursor.__next__()
+            row = next(cursor)
             if row is not None:
-                book = {'book_id':row[0], 'title':row[1], 'publication_year':row[2]}
+                book = {'id':row[0], 'title':row[1], 'publication_year':row[2]}
         except Exception as e:
             print(e, file=sys.stderr)
         connection.close()
@@ -205,7 +209,7 @@ def get_books_for_author(author_id):
     if connection is not None:
         try:
             for row in get_select_query_results(connection, query, (author_id,)):
-                book = {'book_id':row[0], 'title':row[1], 'publication_year':row[2]}
+                book = {'id':row[0], 'title':row[1], 'publication_year':row[2]}
                 book_list.append(book)
         except Exception as e:
             print(e, file=sys.stderr)
@@ -227,7 +231,7 @@ def get_authors_for_book(book_id):
     if connection is not None:
         try:
             for row in get_select_query_results(connection, query, (book_id,)):
-                author = {'author_id':row[0],
+                author = {'id':row[0],
                           'first_name':row[1], 'last_name':row[2],
                           'birth_year':row[3], 'death_year':row[4]}
                 author_list.append(author)
