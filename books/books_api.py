@@ -2,9 +2,10 @@
 '''
     books_api.py
     Jeff Ondich, 25 April 2016
+    Updated 3 May 2018
 
     Simple Flask API used in the sample web app for
-    CS 257, Spring 2016-2017. This is the Flask app for the
+    CS 257, Spring 2016-2018. This is the Flask app for the
     "books and authors" API only. There's a separate Flask app
     for the books/authors website.
 '''
@@ -16,38 +17,40 @@ import psycopg2
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
-def _fetch_all_rows_for_query(query):
+def get_connection():
     '''
-    Returns a list of rows obtained from the books database by the specified SQL
-    query. If the query fails for any reason, an empty list is returned.
-
-    Note that this is not necessarily the right error-handling choice. Would users
-    of the API like to know the nature of the error? Do we as API implementors
-    want to share that information? There are many considerations to balance.
+    Returns a connection to the database described
+    in the config module. Returns None if the
+    connection attempt fails.
     '''
+    connection = None
     try:
-        connection = psycopg2.connect(database=config.database, user=config.user, password=config.password)
+        connection = psycopg2.connect(database=config.database,
+                                      user=config.user,
+                                      password=config.password)
     except Exception as e:
-        print('Connection error:', e, file=sys.stderr)
-        return []
+        print(e, file=sys.stderr)
+    return connection
 
-    rows = []
-    try:
-        cursor = connection.cursor()
+def get_select_query_results(connection, query, parameters=None):
+    '''
+    Executes the specified query with the specified tuple of
+    parameters. Returns a cursor for the query results.
+
+    Raises an exception if the query fails for any reason.
+    '''
+    cursor = connection.cursor()
+    if parameters is not None:
+        cursor.execute(query, parameters)
+    else:
         cursor.execute(query)
-        rows = cursor.fetchall() # This can be trouble if your query results are really big.
-    except Exception as e:
-        print('Error querying database:', e, file=sys.stderr)
-
-    connection.close()
-    return rows
+    return cursor
 
 @app.after_request
 def set_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
-# @ symbol indicates a "python decorator"
 @app.route('/authors/') 
 def get_authors():
     '''
@@ -58,11 +61,13 @@ def get_authors():
         http://.../authors/
         http://.../authors/?sort=last_name
         http://.../authors/?sort=birth_year
+
+    Returns an empty list if there's any database failure.
     '''
     
     query = '''SELECT id, first_name, last_name, birth_year, death_year
                FROM authors ORDER BY '''
-               
+
     sort_argument = flask.request.args.get('sort')
     if sort_argument == 'birth_year':
         query += 'birth_year'
@@ -70,11 +75,17 @@ def get_authors():
         query += 'last_name, first_name'
 
     author_list = []
-    for row in _fetch_all_rows_for_query(query):
-        url = flask.url_for('get_author_by_id', author_id=row[0], _external=True)
-        author = {'author_id':row[0], 'first_name':row[1], 'last_name':row[2],
-                  'birth_year':row[3], 'death_year':row[4], 'url':url}
-        author_list.append(author)
+    connection = get_connection()
+    if connection is not None:
+        try:
+            for row in get_select_query_results(connection, query):
+                author = {'author_id':row[0],
+                          'first_name':row[1], 'last_name':row[2],
+                          'birth_year':row[3], 'death_year':row[4]}
+                author_list.append(author)
+        except Exception as e:
+            print(e, file=sys.stderr)
+        connection.close()
 
     return json.dumps(author_list)
 
@@ -87,15 +98,21 @@ def get_authors_by_last_name(author_last_name):
     '''
     query = '''SELECT id, first_name, last_name, birth_year, death_year
                FROM authors
-               WHERE UPPER(last_name) LIKE UPPER('%{0}%')
-               ORDER BY last_name, first_name'''.format(author_last_name)
+               WHERE UPPER(last_name) LIKE '%%' || UPPER(%s) || '%%'
+               ORDER BY last_name, first_name'''
 
     author_list = []
-    for row in _fetch_all_rows_for_query(query):
-        url = flask.url_for('get_author_by_id', author_id=row[0], _external=True)
-        author = {'author_id':row[0], 'first_name':row[1], 'last_name':row[2],
-                  'birth_year':row[3], 'death_year':row[4], 'url':url}
-        author_list.append(author)
+    connection = get_connection()
+    if connection is not None:
+        try:
+            for row in get_select_query_results(connection, query, (author_last_name,)):
+                author = {'author_id':row[0],
+                          'first_name':row[1], 'last_name':row[2],
+                          'birth_year':row[3], 'death_year':row[4]}
+                author_list.append(author)
+        except Exception as e:
+            print(e, file=sys.stderr)
+        connection.close()
 
     return json.dumps(author_list)
 
@@ -105,38 +122,49 @@ def get_author_by_id(author_id):
     Returns the author resource that has the specified id.
     An author resource will be represented as a JSON dictionary
     with keys 'first_name' (string value), 'last_name' (string),
-    'birth_year' (int), 'death_year' (int), 'author_id' (int),
-    and 'url' (string). The value associated with 'url' is a URL
-    you can use to retrieve this same author in the future.
+    'birth_year' (int), 'death_year' (int), and 'author_id' (int).
+
+    Returns an empty dictionary if there's any database failure.
     '''
     query = '''SELECT id, first_name, last_name, birth_year, death_year
-               FROM authors WHERE id = {0}'''.format(author_id)
+               FROM authors WHERE id = %s'''
 
-    rows = _fetch_all_rows_for_query(query)
-    if len(rows) > 0:
-        row = rows[0]
-        url = flask.url_for('get_author_by_id', author_id=row[0], _external=True)
-        author = {'author_id':row[0], 'first_name':row[1], 'last_name':row[2],
-                  'birth_year':row[3], 'death_year':row[4], 'url':url}
-        return json.dumps(author)
+    author = {}
+    connection = get_connection()
+    if connection is not None:
+        try:
+            cursor = get_select_query_results(connection, query, (author_id,))
+            row = cursor.__next__()
+            if row is not None:
+                author = {'author_id':row[0],
+                          'first_name':row[1], 'last_name':row[2],
+                          'birth_year':row[3], 'death_year':row[4]}
+        except Exception as e:
+            print(e, file=sys.stderr)
+        connection.close()
 
-    return json.dumps({})
+    return json.dumps(author)
 
 @app.route('/books/')
 def get_books():
     '''
     Returns the list of books in the database. A book resource
     will be represented by a JSON dictionary with keys 'title' (string),
-    'publication_year' (int), and 'url' (string). The value
-    associated with 'url' is a URL you can use to retrieve this
-    same book in the future.
+    and 'publication_year' (int).
+
+    Returns an empty list if there's any database failure.
     '''
     query = 'SELECT id, title, publication_year FROM books ORDER BY title'
     book_list = []
-    for row in _fetch_all_rows_for_query(query):
-        url = flask.url_for('get_book_by_id', book_id=row[0], _external=True)
-        book = {'book_id':row[0], 'title':row[1], 'publication_year':row[2], 'url':url}
-        book_list.append(book)
+    connection = get_connection()
+    if connection is not None:
+        try:
+            for row in get_select_query_results(connection, query):
+                book = {'book_id':row[0], 'title':row[1], 'publication_year':row[2]}
+                book_list.append(book)
+        except Exception as e:
+            print(e, file=sys.stderr)
+        connection.close()
 
     return json.dumps(book_list)
     
@@ -146,48 +174,66 @@ def get_book_by_id(book_id):
     Returns the book resource that has the specified id.
     See get_books for a description of the representation of a book
     resource.
+
+    Returns an empty dictionary if there's any database failure.
     '''
-    query = '''SELECT id, title, publication_year FROM books WHERE id = {0}'''.format(book_id) 
-    rows = _fetch_all_rows_for_query(query)
-    if len(rows) > 0:
-        row = rows[0]
-        url = flask.url_for('get_book_by_id', book_id=row[0], _external=True)
-        book = {'book_id':row[0], 'title':row[1], 'publication_year':row[2], 'url':url}
-        return json.dumps(book)
+    query = '''SELECT id, title, publication_year FROM books WHERE id = %s'''
+    book = {}
+    connection = get_connection()
+    if connection is not None:
+        try:
+            cursor = get_select_query_results(connection, query, (book_id,))
+            row = cursor.__next__()
+            if row is not None:
+                book = {'book_id':row[0], 'title':row[1], 'publication_year':row[2]}
+        except Exception as e:
+            print(e, file=sys.stderr)
+        connection.close()
 
-    return json.dumps({})
+    return json.dumps(book)
 
-@app.route('/author/<author_id>/books/')
+@app.route('/books/author/<author_id>')
 def get_books_for_author(author_id):
     query = '''SELECT books.id, books.title, books.publication_year
                FROM books, authors, books_authors
                WHERE books.id = books_authors.book_id
                  AND authors.id = books_authors.author_id
-                 AND authors.id = {0}
-               ORDER BY books.publication_year'''.format(author_id)
+                 AND authors.id = %s
+               ORDER BY books.publication_year'''
     book_list = []
-    for row in _fetch_all_rows_for_query(query):
-        url = flask.url_for('get_book_by_id', book_id=row[0], _external=True)
-        book = {'book_id':row[0], 'title':row[1], 'publication_year':row[2], 'url':url}
-        book_list.append(book)
+    connection = get_connection()
+    if connection is not None:
+        try:
+            for row in get_select_query_results(connection, query, (author_id,)):
+                book = {'book_id':row[0], 'title':row[1], 'publication_year':row[2]}
+                book_list.append(book)
+        except Exception as e:
+            print(e, file=sys.stderr)
+        connection.close()
 
     return json.dumps(book_list)
 
-@app.route('/book/<book_id>/authors/')
+@app.route('/authors/book/<book_id>')
 def get_authors_for_book(book_id):
     query = '''SELECT authors.id, authors.first_name, authors.last_name,
                  authors.birth_year, authors.death_year
                FROM books, authors, books_authors
                WHERE books.id = books_authors.book_id
                  AND authors.id = books_authors.author_id
-                 AND books.id = {0}
-               ORDER BY authors.last_name, authors.first_name'''.format(book_id)
+                 AND books.id = %s
+               ORDER BY authors.last_name, authors.first_name'''
     author_list = []
-    for row in _fetch_all_rows_for_query(query):
-        url = flask.url_for('get_author_by_id', author_id=row[0], _external=True)
-        author = {'author_id':row[0], 'first_name':row[1], 'last_name':row[2],
-                  'birth_year':row[3], 'death_year':row[4], 'url':url}
-        author_list.append(author)
+    connection = get_connection()
+    if connection is not None:
+        try:
+            for row in get_select_query_results(connection, query, (book_id,)):
+                author = {'author_id':row[0],
+                          'first_name':row[1], 'last_name':row[2],
+                          'birth_year':row[3], 'death_year':row[4]}
+                author_list.append(author)
+        except Exception as e:
+            print(e, file=sys.stderr)
+        connection.close()
 
     return json.dumps(author_list)
 
