@@ -1,0 +1,359 @@
+{
+    "authors": [
+        {
+            "birth_year": 1819,
+            "death_year": 1891,
+            "first_name": "Herman",
+            "id": 1,
+            "last_name": "Melville"
+        },
+        {
+            "birth_year": 1775,
+            "death_year": 1817,
+            "first_name": "Jane",
+            "id": 2,
+            "last_name": "Austen"
+        },
+        {
+            "birth_year": 1890,
+            "death_year": 1976,
+            "first_name": "Agatha",
+            "id": 3,
+            "last_name": "Christie"
+        },
+        {
+            "birth_year": 1947,
+            "death_year": 0,
+            "first_name": "Salman",
+            "id": 4,
+            "last_name": "Rushdie"
+        },
+        {
+            "birth_year": 1931,
+            "death_year": 0,
+            "first_name": "Toni",
+            "id": 5,
+            "last_name": "Morrison"
+        },
+        {
+            "birth_year": 1960,
+            "death_year": 0,
+            "first_name": "Neil",
+            "id": 7,
+            "last_name": "Gaiman"
+        },
+        {
+            "birth_year": 1948,
+            "death_year": 2015,
+            "first_name": "Terry",
+            "id": 8,
+            "last_name": "Pratchett"
+        },
+        {
+            "birth_year": 1945,
+            "death_year": 0,
+            "first_name": "Connie",
+            "id": 9,
+            "last_name": "Willis"
+        },
+        {
+            "birth_year": 1885,
+            "death_year": 1951,
+            "first_name": "Sinclair",
+            "id": 10,
+            "last_name": "Lewis"
+        },
+        {
+            "birth_year": 1818,
+            "death_year": 1848,
+            "first_name": "Emily",
+            "id": 11,
+            "last_name": "Bront\u00eb"
+        },
+        {
+            "birth_year": 1816,
+            "death_year": 1855,
+            "first_name": "Charlotte",
+            "id": 12,
+            "last_name": "Bront\u00eb"
+        },
+        {
+            "birth_year": 1820,
+            "death_year": 1849,
+            "first_name": "Ann",
+            "id": 13,
+            "last_name": "Bront\u00eb"
+        },
+        {
+            "birth_year": 1949,
+            "death_year": 0,
+            "first_name": "Lois McMaster",
+            "id": 14,
+            "last_name": "Bujold"
+        },
+        {
+            "birth_year": 1927,
+            "death_year": 2014,
+            "first_name": "Gabriel",
+            "id": 15,
+            "last_name": "Garc\u00eda M\u00e1rquez"
+        },
+        {
+            "birth_year": 1949,
+            "death_year": 0,
+            "first_name": "Haruki",
+            "id": 16,
+            "last_name": "Murakami"
+        },
+        {
+            "birth_year": 1881,
+            "death_year": 1975,
+            "first_name": "Pelham Grenville",
+            "id": 6,
+            "last_name": "Wodehouse"
+        }
+    ],
+    "books": [
+        {
+            "authors": [
+                "Connie Willis"
+            ],
+            "id": 20,
+            "publication_year": 2010,
+            "title": "All Clear"
+        },
+        {
+            "authors": [
+                "Agatha Christie"
+            ],
+            "id": 14,
+            "publication_year": 1939,
+            "title": "And Then There Were None"
+        },
+        {
+            "authors": [
+                "Toni Morrison"
+            ],
+            "id": 3,
+            "publication_year": 1987,
+            "title": "Beloved"
+        },
+        {
+            "authors": [
+                "Connie Willis"
+            ],
+            "id": 19,
+            "publication_year": 2010,
+            "title": "Blackout"
+        },
+        {
+            "authors": [
+                "Sinclair Lewis"
+            ],
+            "id": 22,
+            "publication_year": 1927,
+            "title": "Elmer Gantry"
+        },
+        {
+            "authors": [
+                "Jane Austen"
+            ],
+            "id": 7,
+            "publication_year": 1815,
+            "title": "Emma"
+        },
+        {
+            "authors": [
+                "Neil Gaiman",
+                "Terry Pratchett"
+            ],
+            "id": 15,
+            "publication_year": 1990,
+            "title": "Good Omens"
+        },
+        {
+            "authors": [
+                "Charlotte Bront\u00eb"
+            ],
+            "id": 24,
+            "publication_year": 1847,
+            "title": "Jane Eyre"
+        },
+        {
+            "authors": [
+                "Pelham Grenville Wodehouse"
+            ],
+            "id": 11,
+            "publication_year": 1923,
+            "title": "Leave it to Psmith"
+        },
+        {
+            "authors": [
+                "Gabriel Garc\u00eda M\u00e1rquez"
+            ],
+            "id": 28,
+            "publication_year": 1985,
+            "title": "Love in the Time of Cholera"
+        },
+        {
+            "authors": [
+                "Sinclair Lewis"
+            ],
+            "id": 21,
+            "publication_year": 1920,
+            "title": "Main Street"
+        },
+        {
+            "authors": [
+                "Salman Rushdie"
+            ],
+            "id": 5,
+            "publication_year": 1981,
+            "title": "Midnight's Children"
+        },
+        {
+            "authors": [
+                "Lois McMaster Bujold"
+            ],
+            "id": 30,
+            "publication_year": 1994,
+            "title": "Mirror Dance"
+        },
+        {
+            "authors": [
+                "Herman Melville"
+            ],
+            "id": 1,
+            "publication_year": 1851,
+            "title": "Moby Dick"
+        },
+        {
+            "authors": [
+                "Agatha Christie"
+            ],
+            "id": 13,
+            "publication_year": 1934,
+            "title": "Murder on the Orient Express"
+        },
+        {
+            "authors": [
+                "Neil Gaiman"
+            ],
+            "id": 16,
+            "publication_year": 1996,
+            "title": "Neverwhere"
+        },
+        {
+            "authors": [
+                "Herman Melville"
+            ],
+            "id": 2,
+            "publication_year": 1847,
+            "title": "Omoo"
+        },
+        {
+            "authors": [
+                "Gabriel Garc\u00eda M\u00e1rquez"
+            ],
+            "id": 27,
+            "publication_year": 1967,
+            "title": "One Hundred Years of Solitude"
+        },
+        {
+            "authors": [
+                "Jane Austen"
+            ],
+            "id": 8,
+            "publication_year": 1813,
+            "title": "Pride and Prejudice"
+        },
+        {
+            "authors": [
+                "Pelham Grenville Wodehouse"
+            ],
+            "id": 10,
+            "publication_year": 1934,
+            "title": "Right Ho, Jeeves"
+        },
+        {
+            "authors": [
+                "Jane Austen"
+            ],
+            "id": 9,
+            "publication_year": 1813,
+            "title": "Sense and Sensibility"
+        },
+        {
+            "authors": [
+                "Lois McMaster Bujold"
+            ],
+            "id": 29,
+            "publication_year": 1986,
+            "title": "Shards of Honor"
+        },
+        {
+            "authors": [
+                "Toni Morrison"
+            ],
+            "id": 4,
+            "publication_year": 1973,
+            "title": "Sula"
+        },
+        {
+            "authors": [
+                "Pelham Grenville Wodehouse"
+            ],
+            "id": 12,
+            "publication_year": 1938,
+            "title": "The Code of the Woosters"
+        },
+        {
+            "authors": [
+                "Salman Rushdie"
+            ],
+            "id": 6,
+            "publication_year": 1988,
+            "title": "The Satanic Verses"
+        },
+        {
+            "authors": [
+                "Ann Bront\u00eb"
+            ],
+            "id": 23,
+            "publication_year": 1848,
+            "title": "The Tenant of Wildfell Hall"
+        },
+        {
+            "authors": [
+                "Terry Pratchett"
+            ],
+            "id": 17,
+            "publication_year": 1996,
+            "title": "Thief of Time"
+        },
+        {
+            "authors": [
+                "Connie Willis"
+            ],
+            "id": 18,
+            "publication_year": 1997,
+            "title": "To Say Nothing of the Dog"
+        },
+        {
+            "authors": [
+                "Charlotte Bront\u00eb"
+            ],
+            "id": 25,
+            "publication_year": 1853,
+            "title": "Villette"
+        },
+        {
+            "authors": [
+                "Emily Bront\u00eb"
+            ],
+            "id": 26,
+            "publication_year": 1847,
+            "title": "Wuthering Heights"
+        }
+    ]
+}
