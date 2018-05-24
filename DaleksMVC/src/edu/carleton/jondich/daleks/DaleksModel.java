@@ -1,5 +1,7 @@
 package edu.carleton.jondich.daleks;
 
+import javafx.scene.control.Cell;
+
 import java.util.Random;
 
 public class DaleksModel {
@@ -78,5 +80,45 @@ public class DaleksModel {
     public CellValue getCellValue(int row, int column) {
         assert row >= 0 && row < this.cells.length && column >= 0 && column < this.cells[0].length;
         return this.cells[row][column];
+    }
+
+    public void moveHeroBy(int rowChange, int columnChange) {
+        int newRow = this.heroRow + rowChange;
+        if (newRow < 0) {
+            newRow = 0;
+        }
+        if (newRow >= this.getRowCount()) {
+            newRow = this.getRowCount() - 1;
+        }
+
+        int newColumn = this.heroColumn + columnChange;
+        if (newColumn < 0) {
+            newColumn = 0;
+        }
+        if (newColumn >= this.getColumnCount()) {
+            newColumn = this.getColumnCount() - 1;
+        }
+
+
+        this.cells[this.heroRow][this.heroColumn] = CellValue.EMPTY;
+        this.heroRow = newRow;
+        this.heroColumn = newColumn;
+        this.moveDaleksToFollowHero();
+    }
+
+    public void teleportHero() {
+        int rowCount = this.cells.length;
+        int columnCount = this.cells[0].length;
+        Random random = new Random();
+        int newRow = random.nextInt(rowCount);
+        int newColumn = random.nextInt(columnCount);
+        this.cells[this.heroRow][this.heroColumn] = CellValue.EMPTY;
+        this.heroRow = newRow;
+        this.heroColumn = newColumn;
+        this.moveDaleksToFollowHero();
+    }
+
+    private void moveDaleksToFollowHero() {
+        this.cells[this.heroRow][this.heroColumn] = CellValue.HERO;
     }
 }
