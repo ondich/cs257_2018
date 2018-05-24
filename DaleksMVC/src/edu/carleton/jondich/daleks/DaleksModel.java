@@ -118,7 +118,56 @@ public class DaleksModel {
         this.moveDaleksToFollowHero();
     }
 
+    // Assumes that the hero has been removed from this.cells.
     private void moveDaleksToFollowHero() {
-        this.cells[this.heroRow][this.heroColumn] = CellValue.HERO;
+        // Initialize a new game board
+        int rowCount = this.cells.length;
+        int columnCount = this.cells[0].length;
+        CellValue[][] newCells = new CellValue[rowCount][columnCount];
+        for (int row = 0; row < rowCount; row++) {
+            for (int column = 0; column < columnCount; column++) {
+                newCells[row][column] = CellValue.EMPTY;
+            }
+        }
+
+        // Move the daleks on the old game board to their new positions on
+        // the new game board. If a collision occurs, adjust score, check for
+        // game-over, check for level-complete, etc.
+        for (int row = 0; row < rowCount; row++) {
+            for (int column = 0; column < columnCount; column++) {
+                CellValue cellValue = this.cells[row][column];
+                if (cellValue != CellValue.EMPTY) {
+                    int newRow = row;
+                    int newColumn = column;
+                    if (cellValue == CellValue.DALEK){
+                        if (newRow < this.heroRow) {
+                            newRow++;
+                        } else if (newRow > this.heroRow) {
+                            newRow--;
+                        }
+
+                        if (newColumn < this.heroColumn) {
+                            newColumn++;
+                        } else if (newColumn > this.heroColumn) {
+                            newColumn--;
+                        }
+                    }
+
+                    if (newCells[newRow][newColumn] == CellValue.EMPTY) {
+                        newCells[newRow][newColumn] = cellValue;
+                    } else {
+                        newCells[newRow][newColumn] = CellValue.SCRAPHEAP;
+                    }
+                }
+            }
+        }
+
+        if (newCells[this.heroRow][this.heroColumn] == CellValue.EMPTY) {
+            newCells[this.heroRow][this.heroColumn] = CellValue.HERO;
+        } else {
+            newCells[this.heroRow][this.heroColumn] = CellValue.SCRAPHEAP;
+        }
+
+        this.cells = newCells;
     }
 }
