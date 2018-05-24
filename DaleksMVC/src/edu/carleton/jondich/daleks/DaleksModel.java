@@ -5,19 +5,19 @@ import java.util.Random;
 public class DaleksModel {
 
     public enum CellValue {
-        EMPTY, HERO, DALEK, SCRAPHEAP
+        EMPTY, RUNNER, DALEK, SCRAPHEAP
     };
 
     private boolean gameOver;
     private int score;
     private int level;
 
-    // Note that heroRow, heroColumn, and dalekCount are all redundant with
+    // Note that runnerRow, runnerColumn, and dalekCount are all redundant with
     // the contents of cells, so we have to be careful throughout to keep them
     // coherent. We maintain this redundancy to avoid lags for large boards.
     private CellValue[][] cells;
-    private int heroRow;
-    private int heroColumn;
+    private int runnerRow;
+    private int runnerColumn;
     private int dalekCount;
 
     public DaleksModel(int rowCount, int columnCount) {
@@ -59,11 +59,11 @@ public class DaleksModel {
             }
         }
 
-        // Place the hero
+        // Place the runner
         Random random = new Random();
-        this.heroRow = random.nextInt(rowCount);
-        this.heroColumn = random.nextInt(columnCount);
-        this.cells[this.heroRow][this.heroColumn] = CellValue.HERO;
+        this.runnerRow = random.nextInt(rowCount);
+        this.runnerColumn = random.nextInt(columnCount);
+        this.cells[this.runnerRow][this.runnerColumn] = CellValue.RUNNER;
 
         // Place the daleks
         this.dalekCount = this.numberOfDaleksForLevel(this.level);
@@ -111,12 +111,12 @@ public class DaleksModel {
         return this.cells[row][column];
     }
 
-    public void moveHeroBy(int rowChange, int columnChange) {
+    public void moveRunnerBy(int rowChange, int columnChange) {
         if (this.gameOver || this.dalekCount == 0) {
             return;
         }
 
-        int newRow = this.heroRow + rowChange;
+        int newRow = this.runnerRow + rowChange;
         if (newRow < 0) {
             newRow = 0;
         }
@@ -124,7 +124,7 @@ public class DaleksModel {
             newRow = this.getRowCount() - 1;
         }
 
-        int newColumn = this.heroColumn + columnChange;
+        int newColumn = this.runnerColumn + columnChange;
         if (newColumn < 0) {
             newColumn = 0;
         }
@@ -133,13 +133,13 @@ public class DaleksModel {
         }
 
 
-        this.cells[this.heroRow][this.heroColumn] = CellValue.EMPTY;
-        this.heroRow = newRow;
-        this.heroColumn = newColumn;
-        this.moveDaleksToFollowHero();
+        this.cells[this.runnerRow][this.runnerColumn] = CellValue.EMPTY;
+        this.runnerRow = newRow;
+        this.runnerColumn = newColumn;
+        this.moveDaleksToFollowRunner();
     }
 
-    public void teleportHero() {
+    public void teleportRunner() {
         if (this.gameOver || this.dalekCount == 0) {
             return;
         }
@@ -149,14 +149,14 @@ public class DaleksModel {
         Random random = new Random();
         int newRow = random.nextInt(rowCount);
         int newColumn = random.nextInt(columnCount);
-        this.cells[this.heroRow][this.heroColumn] = CellValue.EMPTY;
-        this.heroRow = newRow;
-        this.heroColumn = newColumn;
-        this.moveDaleksToFollowHero();
+        this.cells[this.runnerRow][this.runnerColumn] = CellValue.EMPTY;
+        this.runnerRow = newRow;
+        this.runnerColumn = newColumn;
+        this.moveDaleksToFollowRunner();
     }
 
-    // Assumes that the hero has been removed from this.cells.
-    private void moveDaleksToFollowHero() {
+    // Assumes that the runner has been removed from this.cells.
+    private void moveDaleksToFollowRunner() {
         // Initialize a new game board
         int rowCount = this.cells.length;
         int columnCount = this.cells[0].length;
@@ -177,15 +177,15 @@ public class DaleksModel {
                     int newRow = row;
                     int newColumn = column;
                     if (cellValue == CellValue.DALEK){
-                        if (newRow < this.heroRow) {
+                        if (newRow < this.runnerRow) {
                             newRow++;
-                        } else if (newRow > this.heroRow) {
+                        } else if (newRow > this.runnerRow) {
                             newRow--;
                         }
 
-                        if (newColumn < this.heroColumn) {
+                        if (newColumn < this.runnerColumn) {
                             newColumn++;
-                        } else if (newColumn > this.heroColumn) {
+                        } else if (newColumn > this.runnerColumn) {
                             newColumn--;
                         }
                     }
@@ -209,14 +209,14 @@ public class DaleksModel {
             }
         }
 
-        if (newCells[this.heroRow][this.heroColumn] == CellValue.EMPTY) {
-            newCells[this.heroRow][this.heroColumn] = CellValue.HERO;
+        if (newCells[this.runnerRow][this.runnerColumn] == CellValue.EMPTY) {
+            newCells[this.runnerRow][this.runnerColumn] = CellValue.RUNNER;
         } else {
-            if (newCells[this.heroRow][this.heroColumn] == CellValue.DALEK) {
+            if (newCells[this.runnerRow][this.runnerColumn] == CellValue.DALEK) {
                 this.score++;
                 this.dalekCount--;
             }
-            newCells[this.heroRow][this.heroColumn] = CellValue.SCRAPHEAP;
+            newCells[this.runnerRow][this.runnerColumn] = CellValue.SCRAPHEAP;
             this.gameOver = true;
         }
 

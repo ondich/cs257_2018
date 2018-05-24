@@ -45,25 +45,25 @@ public class Controller implements EventHandler<KeyEvent> {
         boolean keyRecognized = true;
         KeyCode code = keyEvent.getCode();
         if (code == KeyCode.LEFT || code == KeyCode.A) {
-            this.daleksModel.moveHeroBy(0, -1);
+            this.daleksModel.moveRunnerBy(0, -1);
         } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
-            this.daleksModel.moveHeroBy(0, 1);
+            this.daleksModel.moveRunnerBy(0, 1);
         } else if (code == KeyCode.UP || code == KeyCode.W) {
-            this.daleksModel.moveHeroBy(-1, 0);
+            this.daleksModel.moveRunnerBy(-1, 0);
         } else if (code == KeyCode.DOWN || code == KeyCode.X) {
-            this.daleksModel.moveHeroBy(1, 0);
+            this.daleksModel.moveRunnerBy(1, 0);
         } else if (code == KeyCode.Q) {
-            this.daleksModel.moveHeroBy(-1, -1);
+            this.daleksModel.moveRunnerBy(-1, -1);
         } else if (code == KeyCode.E) {
-            this.daleksModel.moveHeroBy(-1, 1);
+            this.daleksModel.moveRunnerBy(-1, 1);
         } else if (code == KeyCode.Z) {
-            this.daleksModel.moveHeroBy(1, -1);
+            this.daleksModel.moveRunnerBy(1, -1);
         } else if (code == KeyCode.C) {
-            this.daleksModel.moveHeroBy(1, 1);
+            this.daleksModel.moveRunnerBy(1, 1);
         } else if (code == KeyCode.S) {
-            this.daleksModel.moveHeroBy(0, 0);
+            this.daleksModel.moveRunnerBy(0, 0);
         } else if (code == KeyCode.T) {
-            this.daleksModel.teleportHero();
+            this.daleksModel.teleportRunner();
         } else if (code == KeyCode.G) {
             if (this.daleksModel.isGameOver()) {
                 this.daleksModel.startNewGame();

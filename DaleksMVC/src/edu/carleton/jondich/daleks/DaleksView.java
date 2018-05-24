@@ -62,8 +62,8 @@ public class DaleksView extends Group {
                 } else if (cellValue == DaleksModel.CellValue.SCRAPHEAP) {
                     Image image = new Image(getClass().getResourceAsStream("/res/scrapheap.png"));
                     this.cellViews[row][column].setImage(image);
-                } else if (cellValue == DaleksModel.CellValue.HERO) {
-                    Image image = new Image(getClass().getResourceAsStream("/res/hero.png"));
+                } else if (cellValue == DaleksModel.CellValue.RUNNER) {
+                    Image image = new Image(getClass().getResourceAsStream("/res/runner.png"));
                     this.cellViews[row][column].setImage(image);
                 } else {
                     this.cellViews[row][column].setImage(null);
