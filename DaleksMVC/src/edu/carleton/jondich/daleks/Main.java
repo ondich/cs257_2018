@@ -10,9 +10,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("daleks.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("daleks.fxml"));
+        Parent root = loader.load();
         primaryStage.setTitle("Daleks");
-        primaryStage.setScene(new Scene(root, 300, 275));
+
+        Controller controller = loader.getController();
+        double sceneWidth = controller.getBoardWidth() + 20.0;
+        double sceneHeight = controller.getBoardHeight() + 20.0;
+        primaryStage.setScene(new Scene(root, sceneWidth, sceneHeight));
         primaryStage.show();
     }
 
