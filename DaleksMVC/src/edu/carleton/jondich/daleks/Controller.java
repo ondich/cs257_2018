@@ -81,5 +81,4 @@ public class Controller implements EventHandler<KeyEvent> {
             keyEvent.consume();
         }
     }
-
 }

@@ -1,7 +1,5 @@
 package edu.carleton.jondich.daleks;
 
-import javafx.scene.control.Cell;
-
 import java.util.Random;
 
 public class DaleksModel {

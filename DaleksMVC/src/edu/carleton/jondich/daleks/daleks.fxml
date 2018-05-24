@@ -1,5 +1,4 @@
-<?import javafx.scene.layout.AnchorPane?>
-<?import edu.carleton.jondich.daleks.DaleksView?>
+<?import javafx.scene.layout.AnchorPane?><?import edu.carleton.jondich.daleks.DaleksView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.BorderPane?>
