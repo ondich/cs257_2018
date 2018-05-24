@@ -56,15 +56,27 @@ public class DaleksModel {
 
         // Using a sigmoid function shifted and scaled to gradually increase the density of daleks
         // up to an asymptotic limit.
-        double numerator = Math.pow(Math.E, (double)level);
+        double numerator = Math.pow(Math.E, (double)level - 8.0);
         double denominator = numerator + 1.0;
-        double dalekDensity = 0.4 * numerator / denominator;
-
-        int numberOfDaleks = (int)Math.round(dalekDensity * (double)cellCount);
-        if (numberOfDaleks < 6) {
-            numberOfDaleks = 6;
+        double dalekDensity = 0.2 * numerator / denominator;
+        if (dalekDensity < 0.008) {
+            dalekDensity = 0.008;
         }
 
-        return numberOfDaleks;
+        return (int)Math.round(dalekDensity * (double)cellCount);
+    }
+
+    public int getRowCount() {
+        return this.cells.length;
+    }
+
+    public int getColumnCount() {
+        assert this.cells.length > 0;
+        return this.cells[0].length;
+    }
+
+    public CellValue getCellValue(int row, int column) {
+        assert row >= 0 && row < this.cells.length && column >= 0 && column < this.cells[0].length;
+        return this.cells[row][column];
     }
 }
