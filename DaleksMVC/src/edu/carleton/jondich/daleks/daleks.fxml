@@ -1,12 +1,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import edu.carleton.jondich.daleks.DaleksView?>
 <?import javafx.scene.control.Label?>
-<AnchorPane fx:controller="edu.carleton.jondich.daleks.Controller" xmlns:fx="http://javafx.com/fxml">
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:controller="edu.carleton.jondich.daleks.Controller" xmlns:fx="http://javafx.com/fxml">
+    <!-- See https://apps.carleton.edu/creativeservices/identity/college_colors/ for official Carleton colors -->
+    <top>
+        <BorderPane prefHeight="35" style="-fx-background-color: #0B5091; -fx-padding: 10px, 5px, 10px, 5px" >
+            <left><Label fx:id="scoreLabel" style="-fx-font-size: 150%; -fx-text-fill: white" /></left>
+            <right><Label fx:id="messageLabel" style="-fx-font-size: 150%; -fx-text-fill: white"/></right>
+        </BorderPane>
+    </top>
 
-    <DaleksView fx:id="daleksView" rowCount="30" columnCount="40"
-                AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="30" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10"
-                style="-fx-background-color: #bbb; -fx-border-color:black; -fx-border-width:1px;"/>
+    <center>
+        <DaleksView fx:id="daleksView" rowCount="30" columnCount="40" />
+    </center>
 
-    <Label AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="0" style="-fx-font-size: 100%"
-           text="Stay: S; Left: A; Up-Left: Q; Up: W; Up-Right: E; Right: D; Down-Right: C; Down: X; Down-Left: Z; TELEPORT: T" />
-</AnchorPane>
+    <bottom>
+        <HBox prefHeight="35" style="-fx-padding: 10px, 5px, 10px, 5px; -fx-background-color: #F3B61D">
+            <Label style="-fx-font-size: 140%; -fx-text-fill: white"
+                   text="Help: ? / Teleport: T / Stay: S / Move: W E D C X Z A / New game: G" />
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -10,17 +10,44 @@ public class DaleksModel {
         EMPTY, HERO, DALEK, SCRAPHEAP
     };
 
-    private CellValue[][] cells;
+    private boolean gameOver;
     private int score;
     private int level;
+
+    // Note that heroRow, heroColumn, and dalekCount are all redundant with
+    // the contents of cells, so we have to be careful throughout to keep them
+    // coherent. We maintain this redundancy to avoid lags for large boards.
+    private CellValue[][] cells;
     private int heroRow;
     private int heroColumn;
+    private int dalekCount;
 
     public DaleksModel(int rowCount, int columnCount) {
         assert rowCount > 0 && columnCount > 0;
         this.cells = new CellValue[rowCount][columnCount];
+        this.startNewGame();
+    }
+
+    public void startNewGame() {
+        this.gameOver = false;
+        this.score = 0;
         this.level = 1;
         this.initializeLevel();
+    }
+
+    public void startNextLevel() {
+        if (this.isLevelComplete()) {
+            this.level++;
+            this.initializeLevel();
+        }
+    }
+
+    public boolean isLevelComplete() {
+        return this.dalekCount == 0;
+    }
+
+    public boolean isGameOver() {
+        return this.gameOver;
     }
 
     private void initializeLevel() {
@@ -41,8 +68,8 @@ public class DaleksModel {
         this.cells[this.heroRow][this.heroColumn] = CellValue.HERO;
 
         // Place the daleks
-        int dalekCount = this.numberOfDaleksForLevel(this.level);
-        for (int k = 0; k < dalekCount; k++) {
+        this.dalekCount = this.numberOfDaleksForLevel(this.level);
+        for (int k = 0; k < this.dalekCount; k++) {
             int row = random.nextInt(rowCount);
             int column = random.nextInt(columnCount);
             if (this.cells[row][column] == CellValue.EMPTY) {
@@ -77,12 +104,20 @@ public class DaleksModel {
         return this.cells[0].length;
     }
 
+    public int getScore() {
+        return this.score;
+    }
+
     public CellValue getCellValue(int row, int column) {
         assert row >= 0 && row < this.cells.length && column >= 0 && column < this.cells[0].length;
         return this.cells[row][column];
     }
 
     public void moveHeroBy(int rowChange, int columnChange) {
+        if (this.gameOver || this.dalekCount == 0) {
+            return;
+        }
+
         int newRow = this.heroRow + rowChange;
         if (newRow < 0) {
             newRow = 0;
@@ -107,6 +142,10 @@ public class DaleksModel {
     }
 
     public void teleportHero() {
+        if (this.gameOver || this.dalekCount == 0) {
+            return;
+        }
+
         int rowCount = this.cells.length;
         int columnCount = this.cells[0].length;
         Random random = new Random();
@@ -156,6 +195,16 @@ public class DaleksModel {
                     if (newCells[newRow][newColumn] == CellValue.EMPTY) {
                         newCells[newRow][newColumn] = cellValue;
                     } else {
+                        // Collision! Update score and reduce the number of living daleks.
+                        if (newCells[newRow][newColumn] == CellValue.DALEK) {
+                            this.score++;
+                            this.dalekCount--;
+                        }
+                        if (cellValue == CellValue.DALEK) {
+                            this.score++;
+                            this.dalekCount--;
+                        }
+
                         newCells[newRow][newColumn] = CellValue.SCRAPHEAP;
                     }
                 }
@@ -165,7 +214,12 @@ public class DaleksModel {
         if (newCells[this.heroRow][this.heroColumn] == CellValue.EMPTY) {
             newCells[this.heroRow][this.heroColumn] = CellValue.HERO;
         } else {
+            if (newCells[this.heroRow][this.heroColumn] == CellValue.DALEK) {
+                this.score++;
+                this.dalekCount--;
+            }
             newCells[this.heroRow][this.heroColumn] = CellValue.SCRAPHEAP;
+            this.gameOver = true;
         }
 
         this.cells = newCells;
