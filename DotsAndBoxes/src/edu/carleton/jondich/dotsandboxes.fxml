@@ -1,0 +1,12 @@
+<?import javafx.scene.layout.AnchorPane?>
+<?import edu.carleton.jondich.DotsAndBoxesBoard?>
+<AnchorPane fx:controller="edu.carleton.jondich.Controller" xmlns:fx="http://javafx.com/fxml">
+    <DotsAndBoxesBoard fx:id="gameBoard"
+                       AnchorPane.leftAnchor="20"
+                       AnchorPane.topAnchor="20"
+                       AnchorPane.rightAnchor="20"
+                       AnchorPane.bottomAnchor="20"
+                       rowCount="5"
+                       columnCount="9"
+    />
+</AnchorPane>

@@ -36,7 +36,7 @@ public class Main extends Application {
         Controller controller = loader.getController();
 
         // Set up a KeyEvent handler so we can respond to keyboard activity.
-        root.setOnKeyPressed(controller);
+//        root.setOnKeyPressed(controller);
 
         // One of the most persistent problems I have had in learning to use JavaFX has been
         // what felt like erratic behavior of the KeyEvent handling system. For example, in
@@ -83,7 +83,9 @@ public class Main extends Application {
         // while commenting the Solution below in and out as well.
 
         primaryStage.setTitle("Kinda Pong");
-        primaryStage.setScene(new Scene(root, 700, 500));
+        Scene scene = new Scene(root, 700, 500);
+        primaryStage.setScene(scene);
+        scene.setOnKeyPressed(controller);
         primaryStage.show();
 
         // Solution: once the Stage is displayed, explicitly put the focus on the root node.

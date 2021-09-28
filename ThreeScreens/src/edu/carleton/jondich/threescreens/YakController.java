@@ -8,13 +8,15 @@
 package edu.carleton.jondich.threescreens;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
-public class YakController {
+public class YakController implements EventHandler<KeyEvent> {
     @FXML BorderPane yakRootPane;
 
     public YakController() {
@@ -43,4 +45,8 @@ public class YakController {
         }
     }
 
+    @Override
+    public void handle(KeyEvent event) {
+        System.err.println("Yak KeyEvent");
+    }
 }

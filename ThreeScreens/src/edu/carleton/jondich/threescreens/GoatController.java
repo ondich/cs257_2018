@@ -8,13 +8,15 @@
 package edu.carleton.jondich.threescreens;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
-public class GoatController {
+public class GoatController implements EventHandler<KeyEvent> {
     @FXML BorderPane goatRootPane;
 
     public GoatController() {
@@ -41,5 +43,10 @@ public class GoatController {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    @Override
+    public void handle(KeyEvent event) {
+        System.err.println("Goat KeyEvent");
     }
 }

@@ -44,6 +44,12 @@ public class Controller implements EventHandler<KeyEvent> {
     public void handle(KeyEvent keyEvent) {
         boolean keyRecognized = true;
         KeyCode code = keyEvent.getCode();
+
+        String s = code.getChar();
+        if (s.length() > 0) {
+            char theCharacterWeWant = s.charAt(0);
+        }
+
         if (code == KeyCode.LEFT || code == KeyCode.A) {
             this.daleksModel.moveRunnerBy(0, -1);
         } else if (code == KeyCode.RIGHT || code == KeyCode.D) {

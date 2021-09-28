@@ -21,9 +21,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("moose-screen.fxml"));
         primaryStage.setTitle("Three Screens");
-        primaryStage.setScene(new Scene(root, 1024, 768));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("moose-screen.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root, 1024, 768);
+        MooseController mooseController = loader.getController();
+        scene.setOnKeyPressed(mooseController);
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
